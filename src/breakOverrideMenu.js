@@ -1,4 +1,5 @@
 import React from 'react';
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
 export function BreakOverrideMenu(props) {
 
@@ -22,21 +23,35 @@ export function BreakOverrideMenu(props) {
                             perc
                         </div>
                     </div>
+                    <div className="control">
+                        <button className="button is-danger" onClick={()=>props.removeOverride(e.id)}>
+                            <FontAwesomeIcon icon="times" />
+                        </button>
+                    </div>
                 </div>
             </td>
         </tr>
     ));
 
     return (
-        <div className="field is-grouped">
-            <label className="label">Szünet átírása</label>
-            <div className="control">
-                <div className="box is-fullwidth">
-                    <table className="table is-hoverable is-fullwidth">
-                        <tbody>
-                            {breakOverrides}
-                        </tbody>
-                    </table>
+        
+
+        <div>
+            <div className="field">
+                <label className="label">Szünet átírása</label>
+                <button className="button is-fullwidth is-primary" onClick={props.addOverride}>
+                    <FontAwesomeIcon icon="plus" />
+                </button>
+            </div>
+            <div className="field">
+                <div className="control">
+                    <div className="box is-fullwidth">
+                        <table className="table is-hoverable is-fullwidth">
+                            <tbody>
+                                {breakOverrides}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

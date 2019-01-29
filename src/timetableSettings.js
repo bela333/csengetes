@@ -54,6 +54,14 @@ class TimeTableSettings extends Component{
         this.props.setBreakDuration(value, id)
     }
 
+    removeOverride = (id)=>{
+        this.props.removeOverride(id);
+    }
+
+    addOverride = ()=>{
+        this.props.addOverride();
+    }
+
     render(){
         return (
             <div className="panel">
@@ -69,19 +77,28 @@ class TimeTableSettings extends Component{
                         <LabeledInput title="Szünet hossza">
                             <input type="number" className="input" onChange={this.setBreakLength} value={this.props.breakLength} />
                         </LabeledInput>
-                        <div className="field is-grouped">
+                        <div className="field">
                             <label className="label">Órák kezdete</label>
+                        </div>
+                        <div className="field has-addons">
                             <div className="control">
                                 <input type="number" className="input thin-number" onChange={this.setStartHour} value={this.props.startHour} />
                             </div>
                             <div className="control">
-                                :
+                                <div className="button is-dark" disabled>
+                                    :
+                                </div>
                             </div>
                             <div className="control">
                                 <input type="number" className="input thin-number" onChange={this.setStartMinute} value={formatMinute(this.props.startMinute)} />
                             </div>
                         </div>
-                        <BreakOverrideMenu breakOverrides={this.props.breakOverrides} setBreakLesson={this.setBreakLesson} setBreakDuration={this.setBreakDuration}/>
+                        <BreakOverrideMenu
+                            breakOverrides={this.props.breakOverrides}
+                            setBreakLesson={this.setBreakLesson}
+                            setBreakDuration={this.setBreakDuration}
+                            removeOverride={this.removeOverride}
+                            addOverride={this.addOverride}/>
                     </div>
                 </div>
             </div>
@@ -123,6 +140,12 @@ const reducerToProps = (reducer)=>{
         setBreakLesson: (lesson, id)=>{
             reducer({type: "SET_BREAK_LESSON", lesson: lesson, id: id})
         },
+        removeOverride: (id) => {
+            reducer({type: "REMOVE_OVERRIDE", id: id})
+        },
+        addOverride: () => {
+            reducer({type: "ADD_OVERRIDE", lesson: 1, duration: 15})
+        }
     }
 }
 
