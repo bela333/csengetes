@@ -3,9 +3,14 @@ import 'bulma/bulma.sass';
 import './App.scss';
 import {TimeTableDisplay} from './timetableDisplay'
 import {TimeTableSettings} from './timetableSettings'
+import {connect} from 'react-redux'
 
 class App extends Component {
   render() {
+    const preset = this.props.match.params.preset
+    if (preset != null) {
+      this.props.setPreset(preset);
+    }
     return (
       <div className="section">
             <div className="columns">
@@ -13,7 +18,7 @@ class App extends Component {
                 <TimeTableDisplay />
               </div>
               <div className="column">
-                <TimeTableSettings />
+                <TimeTableSettings/>
               </div>
             </div>
       </div>
@@ -21,4 +26,14 @@ class App extends Component {
   }
 }
 
-export default App;
+const reducerToProps = (reducer)=>{
+  return {
+      setPreset: (preset)=>{
+          reducer({type: "SET_PRESET", preset: preset})
+      }
+  }
+}
+
+var connected = connect(null, reducerToProps)(App)
+
+export {connected as App};

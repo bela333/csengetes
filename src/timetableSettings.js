@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import {LabeledInput} from './labeledInput'
 import { formatMinute } from './formatting';
 import { BreakOverrideMenu } from './breakOverrideMenu';
+import { generatePreset } from './presets';
+import { CopyButton } from './copyButton';
 
 class TimeTableSettings extends Component{
 
@@ -65,7 +67,16 @@ class TimeTableSettings extends Component{
     render(){
         return (
             <div className="panel">
-                <div className="panel-heading">Beállítások</div>
+                <div className="panel-heading">
+                    <div className="level">
+                        <div className="level-left">
+                            <span className="level-item">Beállítások</span>
+                        </div>
+                        <div className="level-right">
+                            <CopyButton className="level-item" copyData={`${window.location.origin}/${this.props.preset}`} text="Link" />
+                        </div>
+                    </div>
+                </div>
                 <div className="panel-block">
                     <div>
                         <LabeledInput title="Órák száma">
@@ -113,7 +124,8 @@ const stateToProps = (state)=>{
         startMinute: state.startMinute,
         lessonLength: state.lessonLength,
         breakLength: state.breakLength,
-        breakOverrides: state.breakOverrides
+        breakOverrides: state.breakOverrides,
+        preset: generatePreset(state)
     }
 }
 

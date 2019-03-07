@@ -1,27 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import {App} from './App';
 import * as serviceWorker from './serviceWorker';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import {v4} from 'uuid'
 import {library} from '@fortawesome/fontawesome-svg-core'
 import {faTimes, faPlus} from '@fortawesome/free-solid-svg-icons'
+import {BrowserRouter, Route} from 'react-router-dom';
+import { generateLesson, defaultState } from './presets';
 
 library.add(faTimes);
 library.add(faPlus);
 
-const defaultState = {
-    lessons: 7,
-    lessonLength: 45,
-    breakLength: 10,
-    startHour: 8,
-    startMinute: 0,
-    breakOverrides: [
-        {lesson: 3, duration: 15, id:v4()}
-    ]
-};
+
 
 function reducer(state = defaultState, action) {
     if (action.type === "SET_LESSONS") {
@@ -68,6 +61,9 @@ function reducer(state = defaultState, action) {
         ];
         return {...state, breakOverrides: newOverrides};
     }
+    if (action.type === "SET_PRESET") {
+        return generateLesson(action.preset);
+    }
     return state;
 }
 
@@ -77,7 +73,14 @@ store.subscribe((a)=>{
     console.log(store.getState());
 })
 
-ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
+ReactDOM.render(<Provider store={store}>
+    <BrowserRouter>
+        <div>
+            <Route path="/:preset" component={App}></Route>
+            <Route path="/" exact={true} component={App}></Route>
+        </div>
+    </BrowserRouter>
+</Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
