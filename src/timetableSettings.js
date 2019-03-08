@@ -78,7 +78,7 @@ class TimeTableSettings extends Component{
                     </div>
                 </div>
                 <div className="panel-block">
-                    <div>
+                    <div className="allwidth">
                         <LabeledInput title="Órák száma">
                             <input type="number" className="input" onChange={this.setLessons} value={this.props.lessons} />
                         </LabeledInput>

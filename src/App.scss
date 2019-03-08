@@ -1,3 +1,17 @@
+@import 'bulma/bulma.sass';
+
 /*.thin-number{
     width: 80px;
 }*/
+
+@include mobile{
+	.breakoverride{
+		display: block !important;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+}
+
+.allwidth{
+	width: 100%;
+}

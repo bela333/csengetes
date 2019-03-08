@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import 'bulma/bulma.sass';
+//import 'bulma/bulma.sass';
 import './App.scss';
 import {TimeTableDisplay} from './timetableDisplay'
 import {TimeTableSettings} from './timetableSettings'
