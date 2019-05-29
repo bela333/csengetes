@@ -9,21 +9,37 @@ import { CopyButton } from './copyButton';
 class TimeTableSettings extends Component{
 
     updateState(props, state){
-        var hour = this.state.startHour;
-        if (this.state.startHour < 0 || this.state.startHour >= 24) {
+        var hour = this.state.startHour + "";
+        console.log(hour);
+        
+        if (hour < 0 || hour >= 24 || hour.trim()=="" || Number(hour)==NaN) {
             hour = props.startHour
             this.setState({startHour: hour})
         }
-        var minute = this.state.startMinute;
+        var minute = this.state.startMinute + "";
         minute = formatMinute(minute)
-        if (this.state.startMinute < 0 || this.state.startMinute >= 60) {
+        if (minute < 0 || minute >= 60 || minute.trim()=="" || Number(minute)==NaN) {
             minute = props.startMinute
-            this.setState({startMinute: minute})
         }
-        
-        props.setLessons(this.state.lessons)
-        props.setLessonLength(this.state.lessonLength)
-        props.setBreakLength(this.state.breakLength)
+        this.setState({startMinute: minute})
+        var lessons = this.state.lessons + ""
+        if (lessons > 100 || lessons <= 0 || lessons.trim() == "" || Number(lessons) == NaN) {
+            lessons = props.lessons
+            this.setState({lessons: lessons})
+        }
+        var lessonLength = this.state.lessonLength + ""
+        if (lessonLength <= 0 || lessonLength.trim() == "" || Number(lessonLength) == NaN) {
+            lessonLength = props.lessonLength
+            this.setState({lessonLength: lessonLength})
+        }
+        var breakLength = this.state.breakLength + ""
+        if (breakLength <= 0 || breakLength.trim() == "" || Number(breakLength) == NaN) {
+            breakLength = props.breakLength
+            this.setState({breakLength: breakLength})
+        }
+        props.setLessons(Number(lessons))
+        props.setLessonLength(Number(lessonLength))
+        props.setBreakLength(Number(breakLength))
         props.setStartHour(Number(hour))
         props.setStartMinute(Number(minute))
         
@@ -31,18 +47,18 @@ class TimeTableSettings extends Component{
 
     setLessons = (e)=>{
         this.setState({
-            lessons: Number(e.target.value)
+            lessons: e.target.value
         })
     }
 
     setLessonLength = (e)=>{
         this.setState({
-            lessonLength: Number(e.target.value)
+            lessonLength: e.target.value
         })
     }
     setBreakLength = (e)=>{
         this.setState({
-            breakLength: Number(e.target.value)
+            breakLength: e.target.value
         })
     }
     setStartHour = (e)=>{
@@ -84,11 +100,11 @@ class TimeTableSettings extends Component{
     constructor(props){
         super(props);
         this.state = {
-            lessons: this.props.lessons,
-            startHour: this.props.startHour,
-            startMinute: this.props.startMinute,
-            lessonLength: this.props.lessonLength,
-            breakLength: this.props.breakLength,
+            lessons: this.props.lessons + "",
+            startHour: this.props.startHour + "",
+            startMinute: formatMinute(this.props.startMinute),
+            lessonLength: this.props.lessonLength + "",
+            breakLength: this.props.breakLength + "",
             uninitialized: false
         };
     }
@@ -147,7 +163,6 @@ class TimeTableSettings extends Component{
 }
 
 const stateToProps = (state)=>{
-    console.log(state, generatePreset(state));
     return {
         lessons: state.lessons,
         startHour: state.startHour,
