@@ -9,7 +9,8 @@ export const defaultState = {
     startMinute: 0,
     breakOverrides: [
         {lesson: 3, duration: 15, id:v4()}
-    ]
+    ],
+    loadedPreset: false
 };
 
 export function generateLesson(preset){

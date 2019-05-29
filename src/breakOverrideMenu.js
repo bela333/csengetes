@@ -1,35 +1,46 @@
-import React from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 
-export function BreakOverrideMenu(props) {
+function BreakOverrideElement({e, removeOverride, ...props}){
+    const _setBreakLesson = props.setBreakLesson;
+    const _setBreakDuration = props.setBreakDuration;
+    const [lesson,setLesson] = useState(e.lesson);
+    const [duration,setDuration] = useState(e.duration);
+    const updateState = useCallback(()=>{
+        _setBreakLesson(e.id, lesson);
+        _setBreakDuration(e.id, duration);
+    }, [e.id, _setBreakLesson, _setBreakDuration, lesson, duration])
+    return (<td>
+        <div className="field has-addons breakoverride">
+            <div className="control">
+                <input onBlur={updateState} className="input thin-number" type="number" value={lesson} onChange={(a)=>setLesson(a.target.value)} />
+            </div>
+            <div className="control">
+                <div className="button is-dark is-fullwidth" disabled>
+                    . óra után
+                </div>
+            </div>
+            <div className="control">
+                <input onBlur={updateState} className="input thin-number" type="number" value={duration} onChange={(a)=>setDuration(a.target.value)}/>
+            </div>
+            <div className="control">
+                <div className="button is-dark is-fullwidth" disabled>
+                    perc
+                </div>
+            </div>
+            <div className="control">
+                <button className="button is-danger is-fullwidth" onClick={()=>removeOverride(e.id)}>
+                    <FontAwesomeIcon icon="times" />
+                </button>
+            </div>
+        </div>
+    </td>);
+}
 
+export function BreakOverrideMenu(props) {
     var breakOverrides = props.breakOverrides.map(e=>(
         <tr key={e.id}>
-            <td>
-                <div className="field has-addons breakoverride">
-                    <div className="control">
-                        <input className="input thin-number" type="number" value={e.lesson} onChange={(...a)=>props.setBreakLesson(e.id, ...a)} />
-                    </div>
-                    <div className="control">
-                        <div className="button is-dark is-fullwidth" disabled>
-                            . óra után
-                        </div>
-                    </div>
-                    <div className="control">
-                        <input className="input thin-number" type="number" value={e.duration} onChange={(...a)=>props.setBreakDuration(e.id, ...a)}/>
-                    </div>
-                    <div className="control">
-                        <div className="button is-dark is-fullwidth" disabled>
-                            perc
-                        </div>
-                    </div>
-                    <div className="control">
-                        <button className="button is-danger is-fullwidth" onClick={()=>props.removeOverride(e.id)}>
-                            <FontAwesomeIcon icon="times" />
-                        </button>
-                    </div>
-                </div>
-            </td>
+            <BreakOverrideElement e={e} setBreakLesson={props.setBreakLesson} setBreakDuration={props.setBreakDuration} removeOverride={props.removeOverride} />
         </tr>
     ));
 

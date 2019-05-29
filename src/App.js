@@ -6,12 +6,15 @@ import {TimeTableSettings} from './timetableSettings'
 import {connect} from 'react-redux'
 
 class App extends Component {
-  render() {
+  constructor(props){
+    super(props);
     const preset = this.props.match.params.preset
     if (preset != null) {
       this.props.setPreset(preset);
     }
-    return (
+  }
+  render() {
+    var content = (
       <div className="section">
             <div className="columns">
               <div className="column is-two-thirds">
@@ -23,6 +26,11 @@ class App extends Component {
             </div>
       </div>
     );
+    if (this.props.match.params.preset && !this.props.loadedPreset) {
+      content = (<div />)
+    }
+
+    return content;
   }
 }
 
@@ -34,6 +42,12 @@ const reducerToProps = (reducer)=>{
   }
 }
 
-var connected = connect(null, reducerToProps)(App)
+const stateToProps = (state)=>{
+  return {
+    loadedPreset: state.loadedPreset
+  }
+}
+
+var connected = connect(stateToProps, reducerToProps)(App)
 
 export {connected as App};

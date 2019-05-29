@@ -62,7 +62,7 @@ function reducer(state = defaultState, action) {
         return {...state, breakOverrides: newOverrides};
     }
     if (action.type === "SET_PRESET") {
-        return generateLesson(action.preset);
+        return {...generateLesson(action.preset), loadedPreset: true};
     }
     return state;
 }

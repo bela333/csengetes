@@ -8,37 +8,55 @@ import { CopyButton } from './copyButton';
 
 class TimeTableSettings extends Component{
 
-    setLessons = (e)=>{
-        var lessons = Number(e.target.value);
-        if (lessons < 1) {
-            lessons = 1;
+    updateState(props, state){
+        var hour = this.state.startHour;
+        if (this.state.startHour < 0 || this.state.startHour >= 24) {
+            hour = props.startHour
+            this.setState({startHour: hour})
         }
-        this.props.setLessons(lessons)
+        var minute = this.state.startMinute;
+        minute = formatMinute(minute)
+        if (this.state.startMinute < 0 || this.state.startMinute >= 60) {
+            minute = props.startMinute
+            this.setState({startMinute: minute})
+        }
+        
+        props.setLessons(this.state.lessons)
+        props.setLessonLength(this.state.lessonLength)
+        props.setBreakLength(this.state.breakLength)
+        props.setStartHour(Number(hour))
+        props.setStartMinute(Number(minute))
+        
+    }
+
+    setLessons = (e)=>{
+        this.setState({
+            lessons: Number(e.target.value)
+        })
     }
 
     setLessonLength = (e)=>{
-        this.props.setLessonLength(Number(e.target.value))
+        this.setState({
+            lessonLength: Number(e.target.value)
+        })
     }
     setBreakLength = (e)=>{
-        this.props.setBreakLength(Number(e.target.value))
+        this.setState({
+            breakLength: Number(e.target.value)
+        })
     }
     setStartHour = (e)=>{
-        var hour = Number(e.target.value) % 24;
-        while (hour < 0) {
-            hour += 24;
-        }
-        this.props.setStartHour(hour)
+        this.setState({
+            startHour: e.target.value
+        })
     }
     setStartMinute = (e)=>{
-        var minute = Number(e.target.value) % 60;
-        while (minute < 0) {
-            minute += 60;
-        }
-        this.props.setStartMinute(minute)
+        this.setState({
+            startMinute: e.target.value
+        })
     }
 
-    setBreakLesson = (id, e)=>{
-        var value = e.target.value;
+    setBreakLesson = (id, value)=>{
         if (value < 1) {
             value = 1;
         }
@@ -48,8 +66,7 @@ class TimeTableSettings extends Component{
         this.props.setBreakLesson(value, id)
     }
 
-    setBreakDuration = (id, e)=>{
-        var value = e.target.value;
+    setBreakDuration = (id, value)=>{
         if(value < 0){
             value = 0;
         }
@@ -62,6 +79,18 @@ class TimeTableSettings extends Component{
 
     addOverride = ()=>{
         this.props.addOverride();
+    }
+
+    constructor(props){
+        super(props);
+        this.state = {
+            lessons: this.props.lessons,
+            startHour: this.props.startHour,
+            startMinute: this.props.startMinute,
+            lessonLength: this.props.lessonLength,
+            breakLength: this.props.breakLength,
+            uninitialized: false
+        };
     }
 
     render(){
@@ -80,20 +109,20 @@ class TimeTableSettings extends Component{
                 <div className="panel-block">
                     <div className="allwidth">
                         <LabeledInput title="Órák száma">
-                            <input type="number" className="input" onChange={this.setLessons} value={this.props.lessons} />
+                            <input onBlur={()=>this.updateState(this.props, this.state)} type="number" className="input" onChange={this.setLessons} value={this.state.lessons} />
                         </LabeledInput>
                         <LabeledInput title="Órák hossza">
-                            <input type="number" className="input" onChange={this.setLessonLength} value={this.props.lessonLength} />
+                            <input onBlur={()=>this.updateState(this.props, this.state)} type="number" className="input" onChange={this.setLessonLength} value={this.state.lessonLength} />
                         </LabeledInput>
                         <LabeledInput title="Szünet hossza">
-                            <input type="number" className="input" onChange={this.setBreakLength} value={this.props.breakLength} />
+                            <input onBlur={()=>this.updateState(this.props, this.state)} type="number" className="input" onChange={this.setBreakLength} value={this.state.breakLength} />
                         </LabeledInput>
                         <div className="field">
                             <label className="label">Órák kezdete</label>
                         </div>
                         <div className="field has-addons">
                             <div className="control">
-                                <input type="number" className="input thin-number" onChange={this.setStartHour} value={this.props.startHour} />
+                                <input onBlur={()=>this.updateState(this.props, this.state)} type="number" className="input thin-number" onChange={this.setStartHour} value={this.state.startHour} />
                             </div>
                             <div className="control">
                                 <div className="button is-dark" disabled>
@@ -101,7 +130,7 @@ class TimeTableSettings extends Component{
                                 </div>
                             </div>
                             <div className="control">
-                                <input type="number" className="input thin-number" onChange={this.setStartMinute} value={formatMinute(this.props.startMinute)} />
+                                <input onBlur={()=>this.updateState(this.props, this.state)} type="number" className="input thin-number" onChange={this.setStartMinute} value={this.state.startMinute} />
                             </div>
                         </div>
                         <BreakOverrideMenu
@@ -118,6 +147,7 @@ class TimeTableSettings extends Component{
 }
 
 const stateToProps = (state)=>{
+    console.log(state, generatePreset(state));
     return {
         lessons: state.lessons,
         startHour: state.startHour,

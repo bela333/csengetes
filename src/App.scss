@@ -9,6 +9,16 @@
 		display: block !important;
 		margin-top: 10px;
 		margin-bottom: 10px;
+		.control:first-child *{
+			border-radius: 0px !important; 
+			border-top-left-radius: $input-radius !important;
+			border-top-right-radius: $input-radius !important;
+		}
+		.control:last-child *{
+			border-radius: 0px !important; 
+			border-bottom-left-radius: $input-radius !important;
+			border-bottom-right-radius: $input-radius !important;
+		}
 	}
 }
 
